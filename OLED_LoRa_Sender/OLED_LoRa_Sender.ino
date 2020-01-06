@@ -47,22 +47,32 @@ void setup() {
   display.flipScreenVertically();  
   display.setFont(ArialMT_Plain_10);
    
+  
+    display.clear();
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_24);
+  display.drawString(64 , 0 , "CTL");
+  display.drawString(64 , 20 , "Transmitter");
+  display.drawString(64 , 40 , "Ready!");
+  display.display();
+
   delay(1500);
 }
 
 void loop() {
   display.clear();
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_24);
   
-  display.drawString(0, 0, "Sending packet: ");
-  display.drawString(90, 0, String(counter));
+  display.drawString(64, 0, "Sending");
+  display.drawString(64, 20, "Packet ");
+  display.drawString(64, 40, String(counter));
   Serial.println(String(counter));
   display.display();
 
   // send packet
   LoRa.beginPacket();
-  LoRa.print("hello ");
+  LoRa.print("Packet ");
   LoRa.print(counter);
   LoRa.endPacket();
 

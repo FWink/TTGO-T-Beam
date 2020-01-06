@@ -20,11 +20,11 @@ String packet ;
 
 void loraData(){
   display.clear();
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
-  display.setFont(ArialMT_Plain_10);
-  display.drawString(0 , 15 , "Received "+ packSize + " bytes");
-  display.drawStringMaxWidth(0 , 26 , 128, packet);
-  display.drawString(0, 0, rssi); 
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_24);
+  //display.drawString(64 , 20 , "Received "+ packSize + " bytes");
+  display.drawStringMaxWidth(64 , 40 , 128, packet);
+  display.drawString(64, 0, rssi); 
   display.display();
   Serial.println(rssi);
 }
@@ -60,7 +60,16 @@ void setup() {
   display.flipScreenVertically();  
   display.setFont(ArialMT_Plain_10);
    
+  display.clear();
+  display.setTextAlignment(TEXT_ALIGN_CENTER);
+  display.setFont(ArialMT_Plain_24);
+  display.drawString(64 , 0 , "CTL");
+  display.drawString(64 , 20 , "Receiver");
+  display.drawString(64 , 40 , "Ready!");
+  display.display();
+  
   delay(1500);
+
 }
 
 void loop() {
