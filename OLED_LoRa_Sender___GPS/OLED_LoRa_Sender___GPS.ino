@@ -114,7 +114,8 @@ static void smartDelay(unsigned long ms)
       gps.encode(GPS.read());
   } while (millis() - start < ms);
   
-  if(!gps.isValid() || !(gps.location.isUpdated() || gps.date.isUpdated() || gps.time.isUpdated()))
+  if(!(gps.location.isValid() && gps.date.isValid() && gps.time.isValid()) ||
+      !(gps.location.isUpdated() || gps.date.isUpdated() || gps.time.isUpdated()))
     return;
 
   display.clear();

@@ -60,7 +60,7 @@ void loraData(){
 
   //calculate distance in meters
   double distance = -1;
-  if(gps.isValid()) {
+  if(gps.location.isValid()) {
     distance = TinyGPSPlus.distanceBetween(
       gps.location.lat(),
       gps.location.lng(),
