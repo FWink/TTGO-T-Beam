@@ -76,7 +76,7 @@ Serial.begin(115200);
     while (1);
   }
   //LoRa.onReceive(cbk);
-  LoRa.receive();
+  // LoRa.receive();
   Serial.println("init ok");
   display.init();
   display.flipScreenVertically();  
