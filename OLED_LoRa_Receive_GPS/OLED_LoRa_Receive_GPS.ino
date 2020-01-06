@@ -55,13 +55,13 @@ void loraData(){
   }
 
   int counter = strtol(lines[LORA_MESSAGE_FORMAT_COUNTER_LINE_INDEX], NULL, 10);
-  double latitude = strod(lines[LORA_MESSAGE_FORMAT_LATITUDE_LINE_INDEX], NULL);
-  double longitude = strod(lines[LORA_MESSAGE_FORMAT_LONGITUDE_LINE_INDEX], NULL);
+  double latitude = strtod(lines[LORA_MESSAGE_FORMAT_LATITUDE_LINE_INDEX], NULL);
+  double longitude = strtod(lines[LORA_MESSAGE_FORMAT_LONGITUDE_LINE_INDEX], NULL);
 
   //calculate distance in meters
   double distance = -1;
   if(gps.location.isValid()) {
-    distance = TinyGPSPlus.distanceBetween(
+    distance = TinyGPSPlus::distanceBetween(
       gps.location.lat(),
       gps.location.lng(),
       latitude,
