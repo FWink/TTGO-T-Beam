@@ -44,9 +44,11 @@ void loraData(){
   char* lines[LORA_MESSAGE_FORMAT_LINES_MAX];
   int i = 0;
   char* line = strtok(copy, "\r\n");
-  while(line != NULL && ++i < LORA_MESSAGE_FORMAT_LINES_MAX) {
+  do {
+    lines[i] = line;
     line = strtok(NULL, "\r\n");
   }
+  while(++i < LORA_MESSAGE_FORMAT_LINES_MAX && line != NULL);
 
   if(i != LORA_MESSAGE_FORMAT_LINES_MAX) {
     Serial.print("Invalid packet format, not enough lines: ");
