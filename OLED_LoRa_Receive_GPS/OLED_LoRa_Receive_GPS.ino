@@ -44,7 +44,7 @@ void loraData(){
   char* lines[LORA_MESSAGE_FORMAT_LINES_MAX];
   int i = 0;
   char* line = strtok(copy, "\r\n");
-  while(line != NULL && ++i < LORA_MESSAGE_FORMAT_LINES_MAX)
+  while(line != NULL && ++i < LORA_MESSAGE_FORMAT_LINES_MAX) {
     line = strtok(NULL, "\r\n");
   }
 
