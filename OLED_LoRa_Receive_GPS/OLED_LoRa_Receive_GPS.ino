@@ -5,6 +5,8 @@
 #include "images.h"
 #include <TinyGPS++.h>
 #include <axp20x.h>
+#include <string.h>
+#include <stdlib.h>
 
 
 #define SCK     5    // GPIO5  -- SX1278's SCK
@@ -24,16 +26,62 @@ String rssi = "RSSI --";
 String packSize = "--";
 String packet ;
 
+#define LORA_MESSAGE_FORMAT_COUNTER_LINE_INDEX 0
+#define LORA_MESSAGE_FORMAT_DATETIME_LINE_INDEX 1
+#define LORA_MESSAGE_FORMAT_LATITUDE_LINE_INDEX 2
+#define LORA_MESSAGE_FORMAT_LONGITUDE_LINE_INDEX 3
+#define LORA_MESSAGE_FORMAT_LINES_MAX 4
 
 void loraData(){
+
+  Serial.println("LoRa received:");
+  Serial.print(packet);
+
+  //we receive one chunk of data per line: packet counter|date-time (ISO-8601)|lat|lng
+  char copy[packet.length() + 1];
+  strcpy(copy, packet.c_str());
+
+  char* lines[LORA_MESSAGE_FORMAT_LINES_MAX];
+  int i = 0;
+  char* line = strtok(copy, "\r\n");
+  while(line != NULL && ++i < LORA_MESSAGE_FORMAT_LINES_MAX)
+    line = strtok(NULL, "\r\n");
+  }
+
+  if(i != LORA_MESSAGE_FORMAT_LINES_MAX) {
+    Serial.print("Invalid packet format, not enough lines: ");
+    Serial.println(i);
+    return;
+  }
+
+  int counter = strtol(lines[LORA_MESSAGE_FORMAT_COUNTER_LINE_INDEX], NULL, 10);
+  double latitude = strod(lines[LORA_MESSAGE_FORMAT_LATITUDE_LINE_INDEX], NULL);
+  double longitude = strod(lines[LORA_MESSAGE_FORMAT_LONGITUDE_LINE_INDEX], NULL);
+
+  //calculate distance in meters
+  double distance = -1;
+  if(gps.isValid()) {
+    distance = TinyGPSPlus.distanceBetween(
+      gps.location.lat(),
+      gps.location.lng(),
+      latitude,
+      longitude
+    );
+  }
+
+  String strDistance = String(distance, 1) + "m";
+
   display.clear();
   display.setTextAlignment(TEXT_ALIGN_CENTER);
   display.setFont(ArialMT_Plain_24);
   //display.drawString(64 , 20 , "Received "+ packSize + " bytes");
-  display.drawStringMaxWidth(64 , 40 , 128, packet);
-  display.drawString(64, 0, rssi); 
+  display.drawStringMaxWidth(64 , 40 , 128, strDistance);
+  display.drawString(64, 0, rssi);
+
   display.display();
   Serial.println(rssi);
+  Serial.println("******************");
+  Serial.println("");
 }
 
 void cbk(int packetSize) {

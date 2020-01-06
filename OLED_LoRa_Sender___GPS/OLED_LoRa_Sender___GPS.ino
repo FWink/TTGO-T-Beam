@@ -114,6 +114,9 @@ static void smartDelay(unsigned long ms)
       gps.encode(GPS.read());
   } while (millis() - start < ms);
   
+  if(!gps.isValid() || !(gps.location.isUpdated() || gps.date.isUpdated() || gps.time.isUpdated()))
+    return;
+
   display.clear();
   display.setTextAlignment(TEXT_ALIGN_CENTER);
   display.setFont(ArialMT_Plain_24);
@@ -126,8 +129,37 @@ static void smartDelay(unsigned long ms)
 
   // send packet
   LoRa.beginPacket();
-  LoRa.print("Packet ");
-  LoRa.print(counter);
+  // LoRa.print("Packet ");
+
+  //for a start we send different information separated by line breaks:
+
+  //packet counter
+  LoRa.println(counter);
+
+  //date/time (ISO 8601)
+  int year = gps.date.year();
+  //not sure about the year format here
+  if(year < 2000)
+    year += 2000;
+  LoRa.print(year);
+  LoRa.print("-");
+  LoRa.print(gps.date.month());
+  LoRa.print("-");
+  LoRa.print(gps.date.day());
+  LoRa.print("T");
+  LoRa.print(gps.time.hour());
+  LoRa.print(":");
+  LoRa.print(gps.time.minute());
+  LoRa.print(":");
+  LoRa.print(gps.time.second());
+  LoRa.println("Z");
+
+  //latitue
+  LoRa.println(gps.location.lat(), 6);
+  //longitude
+  LoRa.println(gps.location.lng(), 6);
+
+  //send:
   LoRa.endPacket();
 
   counter++;
